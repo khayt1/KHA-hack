@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#100508">
+<title>KHA | RED ALERT</title>
+
+<style>
+:root {
+  --red: #ff263f;
+  --dark: #100508;
+  --panel: #1b0a10;
+  --text: #ffe7eb;
+  --muted: #bc8992;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at top, #48101c 0%, transparent 55%),
+    var(--dark);
+  color: var(--text);
+  font-family: Consolas, "Courier New", monospace;
+  overflow-x: hidden;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  background: repeating-linear-gradient(
+    transparent 0px,
+    transparent 3px,
+    rgba(255, 30, 55, .06) 4px
+  );
+}
+
+.container {
+  width: min(92%, 700px);
+  margin: auto;
+  padding: 20px 0 35px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px solid #6c1728;
+  padding-bottom: 15px;
+}
+
+.logo {
+  font-size: 15px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.live {
+  color: #ff6477;
+  border: 1px solid #8b2033;
+  padding: 7px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+}
+
+.dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 10px var(--red);
+  margin-left: 5px;
+  animation: blink 1s infinite;
+}
+
+.hero {
+  text-align: center;
+  padding: 35px 0 20px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  color: #ff8493;
+  letter-spacing: 3px;
+}
+
+h1 {
+  font-size: clamp(38px, 10vw, 68px);
+  line-height: 1.1;
+  margin: 12px 0;
+  text-shadow: 0 0 12px #ff263f, 0 0 35px #a00020;
+}
+
+h1 span {
+  color: var(--red);
+}
+
+.subtitle {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.badge {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border: 1px dashed #8d2b3d;
+  color: #ffc1ca;
+  font-size: 11px;
+}
+
+.card {
+  background: linear-gradient(145deg, #220b12, #12080c);
+  border: 1px solid #61202d;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 15px;
+  box-shadow: 0 0 22px #ff263f12;
+}
+
+.card-title {
+  padding: 13px;
+  background: #ff263f0c;
+  border-bottom: 1px solid #61202d;
+  font-size: 11px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.card-content {
+  padding: 17px;
+}
+
+.warning {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.warning-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--red);
+  color: var(--red);
+  font-size: 30px;
+  transform: rotate(45deg);
+  box-shadow: 0 0 15px #ff263f33;
+}
+
+.warning-icon span {
+  transform: rotate(-45deg);
+}
+
+.warning h2 {
+  font-size: 16px;
+  margin: 0 0 7px;
+}
+
+.warning p {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.8;
+  margin: 0;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 10px;
+  margin: 20px 0 8px;
+}
+
+.progress {
+  height: 8px;
+  background: #350c16;
+  border: 1px solid #61202d;
+  overflow: hidden;
+}
+
+.bar {
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #9a001a, #ff263f, #ff9aa7);
+  box-shadow: 0 0 15px var(--red);
+  transition: width .5s linear;
+}
+
+.countdown-area {
+  text-align: center;
+  padding: 20px 10px;
+}
+
+.countdown-label {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.countdown {
+  font-size: clamp(75px, 22vw, 110px);
+  color: var(--red);
+  font-weight: bold;
+  line-height: 1.25;
+  text-shadow: 0 0 20px #ff263f88;
+  font-variant-numeric: tabular-nums;
+}
+
+.urgent {
+  animation: pulse .5s infinite alternate;
+}
+
+.status {
+  color: #ffb6c0;
+  font-size: 11px;
+  min-height: 18px;
+}
+
+.terminal {
+  height: 220px;
+  overflow: auto;
+  direction: ltr;
+  text-align: left;
+  padding: 13px;
+  background: #080507;
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+.line {
+  overflow-wrap: anywhere;
+  color: #d0a2aa;
+}
+
+.line::before {
+  content: "> ";
+  color: var(--red);
+}
+
+.line.alert {
+  color: #ff5267;
+}
+
+.line.good {
+  color: #ffb9c3;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.stat {
+  background: var(--panel);
+  border: 1px solid #4d1823;
+  padding: 13px;
+  border-radius: 8px;
+}
+
+.stat small {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.stat strong {
+  display: block;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.buttons {
+  display: grid;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+button {
+  min-height: 48px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--red);
+  background: linear-gradient(#a90e28, #620918);
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: #190b10;
+  color: #ffc3cb;
+  border-color: #682332;
+}
+
+button:active {
+  transform: scale(.98);
+}
+
+button:disabled {
+  opacity: .5;
+}
+
+footer {
+  text-align: center;
+  color: #85535d;
+  font-size: 10px;
+  line-height: 1.9;
+  padding: 22px 5px 0;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #080407f5;
+}
+
+.overlay.show {
+  display: flex;
+  animation: appear .35s ease;
+}
+
+.reveal-box {
+  width: min(100%, 480px);
+  background: linear-gradient(145deg, #310b16, #13070c);
+  border: 1px solid #ff5267;
+  border-radius: 16px;
+  padding: 25px 20px;
+  text-align: center;
+  box-shadow: 0 0 50px #ff263f30;
+}
+
+.emoji {
+  font-size: 50px;
+}
+
+.reveal-box h2 {
+  font-size: 30px;
+  margin: 12px 0;
+}
+
+.reveal-box h2 span {
+  color: var(--red);
+}
+
+.reveal-box p {
+  color: #e4b7bf;
+  font-size: 13px;
+  line-height: 2;
+}
+
+.safe {
+  display: inline-block;
+  color: #8bffc0;
+  border: 1px solid #28774b;
+  padding: 8px 12px;
+  border-radius: 30px;
+  font-size: 11px;
+  margin-bottom: 17px;
+}
+
+@keyframes blink {
+  50% { opacity: .25; }
+}
+
+@keyframes pulse {
+  to { transform: scale(1.05); }
+}
+
+@keyframes appear {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (min-width: 550px) {
+  .buttons {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+</style>
+</head>
+
+<body>
+<main class="container">
+
+  <header>
+    <div class="logo">✦ KHA // SIMULATOR</div>
+    <div class="live"><span class="dot"></span> DEMO MODE</div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">SIMULATED SECURITY EVENT</div>
+    <h1><span>RED</span> ALERT</h1>
+    <div class="subtitle">
+      واجهة سينمائية تجريبية
+      <br>
+      لا يوجد فحص حقيقي للجهاز
+    </div>
+    <div class="badge">⚠ مؤثرات بصرية فقط — لا يوجد اختراق</div>
+  </section>
+
+  <section class="card">
+    <div class="card-title">
+      <strong><span class="dot"></span> SYSTEM ALERT</strong>
+      <span id="clock">00:00:00</span>
+    </div>
+
+    <div class="card-content">
+      <div class="warning">
+        <div class="warning-icon"><span>!</span></div>
+        <div>
+          <h2>محاكاة تنبيه أمني</h2>
+          <p>
+            الرسائل التالية تمثيلية للعرض فقط.
+            لا يتم فحص هاتفك أو تغيير أي إعداد.
+          </p>
+        </div>
+      </div>
+
+      <div class="progress-info">
+        <span>SIMULATION SEQUENCE</span>
+        <span id="percent">0%</span>
+      </div>
+
+      <div class="progress">
+        <div class="bar" id="bar"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-title">
+      <strong>COUNTDOWN</strong>
+      <span>DEMO TIMER</span>
+    </div>
+
+    <div class="countdown-area">
+      <div class="countdown-label">كشف الحقيقة بعد</div>
+      <div class="countdown" id="countdown">15</div>
+      <div class="status" id="status">جارٍ تشغيل المحاكاة...</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-title">
+      <strong>EVENT LOG</strong>
+      <span id="event-count">2 EVENTS</span>
+    </div>
+
+    <div class="terminal" id="terminal">
+      <div class="line">Visual simulator initialized.</div>
+      <div class="line">Demo mode enabled. No device scan.</div>
+    </div>
+  </section>
+
+  <div class="stats">
+    <div class="stat">
+      <small>MODE</small>
+      <strong>🔴 VISUAL ONLY</strong>
+    </div>
+    <div class="stat">
+      <small>NETWORK ACCESS</small>
+      <strong>NONE</strong>
+    </div>
+    <div class="stat">
+      <small>FILE ACCESS</small>
+      <strong>NONE</strong>
+    </div>
+    <div class="stat">
+      <small>SIMULATION</small>
+      <strong id="sim-state">RUNNING</strong>
+    </div>
+  </div>
+
+  <div class="buttons">
+    <button id="sound-btn" type="button">
+      🔊 تشغيل المؤثرات الصوتية
+    </button>
+
+    <button class="secondary" id="reveal-btn" type="button">
+      كشف الحقيقة الآن
+    </button>
+  </div>
+
+  <footer>
+    KHA RED ALERT — PRANK SIMULATOR
+    <br>
+    صفحة محلية آمنة؛ لا تجمع بيانات ولا ترسل معلومات.
+  </footer>
+
+</main>
+
+<div class="overlay" id="overlay" role="dialog"
+     aria-modal="true" aria-labelledby="reveal-title">
+  <div class="reveal-box">
+    <div class="emoji">🎭</div>
+    <h2 id="reveal-title">إنه مقلب! <span>😂</span></h2>
+
+    <p>
+      هاتفك لم يُخترق!
+      <br>
+      كل ما رأيته كان مؤثرات بصرية داخل صفحة HTML.
+      <br>
+      لم يتم الوصول إلى صورك أو ملفاتك أو حساباتك،
+      ولم يتم إرسال أي بيانات.
+    </p>
+
+    <div class="safe">✓ جهازك آمن — مجرد خدعة بصرية</div>
+
+    <button id="close-btn" type="button">
+      حسنًا، فهمت المقلب
+    </button>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/*
+  KHA RED ALERT
+  خدعة بصرية فقط.
+  لا فحص للأجهزة، لا وصول للملفات، لا جمع بيانات،
+  ولا اتصالات بالشبكة.
+*/
+
+const DURATION = 15;
+
+const $ = id => document.getElementById(id);
+
+const countdownEl = $("countdown");
+const statusEl = $("status");
+const barEl = $("bar");
+const percentEl = $("percent");
+const terminalEl = $("terminal");
+const eventCountEl = $("event-count");
+const clockEl = $("clock");
+const overlayEl = $("overlay");
+const soundBtn = $("sound-btn");
+const revealBtn = $("reveal-btn");
+const closeBtn = $("close-btn");
+const simStateEl = $("sim-state");
+
+let remaining = DURATION;
+let elapsed = 0;
+let eventCount = 2;
+let finished = false;
+let soundEnabled = false;
+let audioContext = null;
+let timers = [];
+let messageIndex = 0;
+
+const messages = [
+  ["Rendering fictional alert graphics...", "alert"],
+  ["Loading visual event sequence...", "good"],
+  ["Demo status: no device scan performed.", "good"],
+  ["Creating cinematic warning animation...", "alert"],
+  ["Local browser animation running.", "good"],
+  ["Preparing the reveal sequence...", "alert"],
+  ["No files or personal data accessed.", "good"],
+  ["Simulation continues...", "alert"],
+  ["Truth reveal is approaching.", "good"],
+  ["Demo complete. Nothing was changed.", "good"]
+];
+
+function addLog(text, type = "") {
+  const line = document.createElement("div");
+
+  // textContent prevents interpreting text as HTML.
+  line.textContent = text;
+  line.className = "line " + type;
+
+  terminalEl.appendChild(line);
+
+  while (terminalEl.children.length > 10) {
+    terminalEl.removeChild(terminalEl.firstElementChild);
+  }
+
+  eventCount++;
+  eventCountEl.textContent = eventCount + " EVENTS";
+  terminalEl.scrollTop = terminalEl.scrollHeight;
+}
+
+function updateProgress(value) {
+  const safeValue = Math.max(0, Math.min(100, value));
+
+  barEl.style.width = safeValue + "%";
+  percentEl.textContent = Math.round(safeValue) + "%";
+}
+
+function updateClock() {
+  const hours = String(Math.floor(elapsed / 3600)).padStart(2, "0");
+  const minutes = String(Math.floor((elapsed % 3600) / 60)).padStart(2, "0");
+  const seconds = String(elapsed % 60).padStart(2, "0");
+
+  clockEl.textContent = `${hours}:${minutes}:${seconds}`;
+  elapsed++;
+}
+
+function playTone(frequency = 440, duration = 0.08) {
+  if (!soundEnabled || !audioContext || finished) return;
+
+  try {
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    oscillator.type = "sawtooth";
+    oscillator.frequency.value = frequency;
+
+    gain.gain.setValueAtTime(0.025, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(
+      0.001,
+      audioContext.currentTime + duration
+    );
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + duration);
+  } catch (_) {
+    // الصوت اختياري؛ لا يؤثر فشل الصوت على المحاكاة.
+  }
+}
+
+function toggleSound() {
+  if (finished) return;
+
+  if (soundEnabled) {
+    soundEnabled = false;
+    soundBtn.textContent = "🔊 تشغيل المؤثرات الصوتية";
+    statusEl.textContent = "المؤثرات الصوتية متوقفة.";
+    return;
+  }
+
+  const AudioContextClass =
+    window.AudioContext || window.webkitAudioContext;
+
+  if (!AudioContextClass) {
+    statusEl.textContent = "المتصفح لا يدعم الصوت؛ تستمر المؤثرات البصرية.";
+    return;
+  }
+
+  try {
+    audioContext = audioContext || new AudioContextClass();
+
+    if (audioContext.state === "suspended") {
+      audioContext.resume();
+    }
+
+    soundEnabled = true;
+    soundBtn.textContent = "🔇 إيقاف المؤثرات الصوتية";
+    statusEl.textContent = "تم تشغيل الصوت الاختياري.";
+    playTone(650, 0.1);
+  } catch (_) {
+    statusEl.textContent = "تعذر تشغيل الصوت في هذا المتصفح.";
+  }
+}
+
+function stopTimers() {
+  timers.forEach(timer => {
+    clearInterval(timer);
+    clearTimeout(timer);
+  });
+
+  timers = [];
+}
+
+function revealTruth() {
+  if (finished) return;
+
+  finished = true;
+  stopTimers();
+
+  updateProgress(100);
+  countdownEl.textContent = "✓";
+  countdownEl.classList.remove("urgent");
+
+  statusEl.textContent = "انتهت المحاكاة — لم يحدث أي اختراق.";
+  simStateEl.textContent = "FINISHED";
+
+  soundBtn.disabled = true;
+  revealBtn.disabled = true;
+
+  addLog("SIMULATION FINISHED — PRANK REVEALED.", "good");
+  addLog("No scan, no file access, no data sent.", "good");
+
+  overlayEl.classList.add("show");
+  closeBtn.focus();
+
+  if (soundEnabled) {
+    playTone(520, 0.1);
+    setTimeout(() => playTone(720, 0.12), 130);
+  }
+}
+
+function closeReveal() {
+  overlayEl.classList.remove("show");
+  statusEl.textContent = "يمكنك إغلاق الصفحة بأمان.";
+  closeBtn.blur();
+}
+
+function tickCountdown() {
+  if (finished) return;
+
+  remaining--;
+
+  countdownEl.textContent = Math.max(remaining, 0);
+  updateProgress(((DURATION - remaining) / DURATION) * 100);
+
+  if (remaining <= 5) {
+    countdownEl.classList.add("urgent");
+    statusEl.textContent = "اقترب موعد كشف الحقيقة...";
+
+    if (soundEnabled) {
+      playTone(300 + remaining * 40, 0.06);
+    }
+  }
+
+  if (remaining <= 0) {
+    revealTruth();
+  }
+}
+
+function nextMessage() {
+  if (finished) return;
+
+  const message = messages[messageIndex % messages.length];
+  messageIndex++;
+
+  addLog(message[0], message[1]);
+
+  if (soundEnabled && message[1] === "alert") {
+    playTone(480, 0.06);
+  }
+}
+
+function startSimulation() {
+  addLog("Simulation started locally.", "good");
+  addLog("Privacy mode active. No network requests.", "good");
+
+  timers.push(setInterval(tickCountdown, 1000));
+  timers.push(setInterval(nextMessage, 1100));
+  timers.push(setInterval(updateClock, 1000));
+}
+
+soundBtn.addEventListener("click", toggleSound);
+revealBtn.addEventListener("click", revealTruth);
+closeBtn.addEventListener("click", closeReveal);
+
+overlayEl.addEventListener("click", event => {
+  if (event.target === overlayEl) closeReveal();
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && overlayEl.classList.contains("show")) {
+    closeReveal();
+  }
+});
+
+window.addEventListener("pagehide", () => {
+  stopTimers();
+
+  if (audioContext && audioContext.state !== "closed") {
+    audioContext.close().catch(() => {});
+  }
+});
+
+startSimulation();
+</script>
+</body>
+</html>
